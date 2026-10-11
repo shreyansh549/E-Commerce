@@ -3,9 +3,10 @@ import prisma from "../config/prisma.js";
 import { createAccessToken } from "../utils/createToken.js";
 
 export const registerUser = async ({ name, email, password }) => {
+  const normalizedEmail = email.trim().toLowerCase();
   const existingUser = await prisma.user.findUnique({
     where: {
-      email,
+      email: normalizedEmail,
     },
   });
 
@@ -20,7 +21,7 @@ export const registerUser = async ({ name, email, password }) => {
   const user = await prisma.user.create({
     data: {
       name,
-      email,
+      email: normalizedEmail,
       passwordHash,
     },
   });
@@ -56,9 +57,9 @@ export const loginUser = async ({ email, password }) => {
     error.statusCode = 401;
     throw error;
   }
-  const token = createAccessToken(user);
+  const token = createAccessToken(existingUser);
 
- // TODO: - create a refresh token with a week expiry
+  // TODO: - create a refresh token with a week expiry
 
   return {
     token: token,
@@ -66,7 +67,7 @@ export const loginUser = async ({ email, password }) => {
       id: existingUser.id,
       name: existingUser.name,
       email: existingUser.email,
-      role: existingUser.role,
+      role: existingUser.roles,
     },
   };
 };

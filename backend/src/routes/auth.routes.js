@@ -11,6 +11,6 @@ const router = express.Router();
 // 3rd parameter: Final route handler function - register
 
 router.post("/register", validate(registerSchema), register);
-router.post("/login", validate(loginSchema, login))
+router.post("/login", validate(loginSchema), login)
 
 export default router;

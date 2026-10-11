@@ -15,7 +15,7 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
-  try {
+  try { 
     const loggedInUser = await loginUser(req.body);
     res.status(200).json({
       success: true,
